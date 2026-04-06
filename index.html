@@ -257,13 +257,15 @@
         window.onload = init;
     </script>
     <div id="custom-alert" class="custom-alert hidden">
-    <div class="alert-content">
-        <div class="alert-icon">
-            <i class="fas fa-sparkles alert-stars"></i>
+    <div class="alert-content-wrapper">
+        <div class="alert-content">
+            <div class="alert-icon">
+                <i class="fas fa-sparkles alert-sparkles"></i>
+            </div>
+            <p id="alert-message">Мэдэгдлийн текст энд гарна.</p>
+            <button onclick="closeAlert()" class="alert-btn">ОК</button>
         </div>
-        <p id="alert-message">Мэдэгдлийн текст энд гарна.</p>
-        <button onclick="closeAlert()" class="alert-btn">ОК</button>
     </div>
-    </div>
+</div>      
 </body>
 </html>
