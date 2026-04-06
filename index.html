@@ -1,1 +1,123 @@
+<!DOCTYPE html>
+<html lang="mn">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Enji Perfume</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;600;700&display=swap');
+        body { font-family: 'Montserrat', sans-serif; background-color: #fff; }
+        .product-card { border-radius: 20px; overflow: hidden; border: 1px solid #eee; transition: 0.3s; }
+        .product-card:hover { transform: translateY(-5px); box-shadow: 0 10px 20px rgba(0,0,0,0.05); }
+        .btn-order { background: linear-gradient(135deg, #000 0%, #333 100%); }
+    </style>
+</head>
+<body class="text-gray-900">
 
+    <nav class="sticky top-0 z-50 bg-white/90 backdrop-blur-md border-b border-gray-100 px-6 py-4 flex justify-between items-center">
+        <div>
+            <h1 class="text-xl font-black italic tracking-tighter">ENJI PERFUME</h1>
+            <p class="text-[8px] uppercase tracking-[0.3em] text-gray-400">Luxury Collection</p>
+        </div>
+        <div class="flex items-center space-x-5">
+            <a href="tel:88020525" class="text-gray-700 text-lg"><i class="fas fa-phone-alt"></i></a>
+            <a href="https://www.facebook.com/share/1KhMToLN7S/" target="_blank" class="text-gray-700 text-xl"><i class="fab fa-facebook-f"></i></a>
+            <button onclick="toggleCart()" class="relative">
+                <i class="fas fa-shopping-bag text-2xl"></i>
+                <span id="cart-count" class="absolute -top-2 -right-2 bg-red-500 text-white text-[10px] w-5 h-5 flex items-center justify-center rounded-full font-bold">0</span>
+            </button>
+        </div>
+    </nav>
+
+    <main class="container mx-auto px-4 py-8">
+        <div id="product-grid" class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 md:gap-8">
+            </div>
+    </main>
+
+    <div id="cart-sidebar" class="fixed inset-y-0 right-0 w-full max-w-md bg-white z-[60] shadow-2xl transform translate-x-full transition-transform duration-300 overflow-y-auto">
+        <div class="p-8">
+            <div class="flex justify-between items-center mb-8 border-b pb-4">
+                <h2 class="text-2xl font-bold">Сагс</h2>
+                <button onclick="toggleCart()" class="text-3xl text-gray-300">&times;</button>
+            </div>
+
+            <div id="cart-items" class="space-y-6 mb-8">
+                </div>
+
+            <div class="space-y-6">
+                <div class="flex justify-between text-xl font-bold border-t pt-4">
+                    <span>Нийт:</span>
+                    <span id="total-price" class="text-red-600">0₮</span>
+                </div>
+
+                <div class="bg-blue-50 p-5 rounded-2xl space-y-2 border border-blue-100">
+                    <p class="text-xs font-bold text-blue-600 uppercase tracking-widest">Төлбөр хүлээн авагч: Энхжаргал</p>
+                    <div class="flex justify-between items-center bg-white p-3 rounded-xl">
+                        <span class="font-bold text-sm">Хаан банк: <span id="acc">5458026272</span></span>
+                        <button onclick="copyAcc()" class="text-[10px] bg-blue-600 text-white px-3 py-1 rounded-lg">Хуулах</button>
+                    </div>
+                </div>
+
+                <div class="space-y-3">
+                    <input type="text" id="phone" placeholder="Холбоо барих утас" class="w-full p-4 bg-gray-50 rounded-xl outline-none focus:ring-1 focus:ring-black transition">
+                    <textarea id="address" placeholder="Хүргэлтийн хаяг" class="w-full p-4 bg-gray-50 rounded-xl outline-none focus:ring-1 focus:ring-black transition h-24"></textarea>
+                    
+                    <label class="block">
+                        <span class="text-[10px] font-bold text-gray-400 uppercase ml-1">Гүйлгээний баримт (Зураг)</span>
+                        <input type="file" id="receipt" class="mt-1 block w-full text-xs text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-xs file:font-bold file:bg-gray-100 file:text-black">
+                    </label>
+                </div>
+
+                <button onclick="sendOrder()" class="w-full btn-order text-white py-5 rounded-2xl font-bold tracking-widest shadow-lg active:scale-95 transition">
+                    ЗАХИАЛГА ИЛГЭЭХ
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const TG_TOKEN = '8578358695:AAGDHEjmw1EDhkdH60HWfys498gmuGM-Njo';
+        const TG_ID = '7069407872';
+
+        const products = [
+            { id: 1, name: "Prada Miniature", img: "1.jpg" },
+            { id: 2, name: "D&G Light Blue", img: "2.jpg" },
+            { id: 3, name: "Victoria's Secret", img: "3.jpg" },
+            { id: 4, name: "212 Sexy Men", img: "4.jpg" },
+            { id: 5, name: "YSL Mon Paris", img: "5.jpg" },
+            { id: 6, name: "Prada Luna Rossa", img: "6.jpg" },
+            { id: 7, name: "Bvlgari Pour Homme", img: "7.jpg" },
+            { id: 8, name: "Dior Set", img: "8.jpg" },
+            { id: 9, name: "Chanel Set", img: "9.jpg" },
+            { id: 10, name: "Creed Set", img: "10.jpg" },
+            { id: 11, name: "Afnan Set", img: "11.jpg" },
+            { id: 12, name: "Viktor&Rolf Set", img: "12.jpg" },
+            { id: 13, name: "MFK Baccarat", img: "13.jpg" },
+            { id: 14, name: "Valentino Roma", img: "14.jpg" }
+        ];
+
+        let cart = [];
+
+        function init() {
+            const grid = document.getElementById('product-grid');
+            grid.innerHTML = products.map(p => {
+                // ҮНИЙН ШҮҮЛТҮҮР: 6.jpg болон 12.jpg бол 120к, бусад нь 100к
+                const price = (p.img === "6.jpg" || p.img === "12.jpg") ? 120000 : 100000;
+                
+                return `
+                    <div class="product-card">
+                        <div class="relative overflow-hidden h-48 md:h-64">
+                            <img src="${p.img}" class="w-full h-full object-cover" onerror="this.src='https://via.placeholder.com/300?text=Зураг+Олдсонгүй'">
+                            <div class="absolute top-3 right-3 bg-white/90 px-3 py-1 rounded-full text-xs font-black shadow-sm">
+                                ${price.toLocaleString()}₮
+                            </div>
+                        </div>
+                        <div class="p-4">
+                            <h3 class="text-[10px] font-bold uppercase tracking-tight h-8 overflow-hidden">${p.name}</h3>
+                            <button onclick="addToCart('${p.name}', ${price}, '${p.img}')" class="w-full mt-3 bg-gray-900 text-white py-3 rounded-xl text-[10px] font-bold hover:bg-red-500 transition active:scale-95">САГСЛАХ</button>
+                        </div>
+                    </div>
+                `;
+            })
