@@ -7,17 +7,20 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;600;700&display=swap');
-        body { font-family: 'Montserrat', sans-serif; background-color: #fbfbfb; }
-        .product-card { border-radius: 20px; overflow: hidden; background: #fff; transition: 0.3s; border: 1px solid #f1f1f1; }
-        .product-card:hover { transform: translateY(-5px); box-shadow: 0 10px 30px rgba(0,0,0,0.05); }
-        .btn-order { background: #000; transition: 0.3s; }
-        .btn-order:hover { background: #333; letter-spacing: 2px; }
+        @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;600;700;900&display=swap');
+        body { font-family: 'Montserrat', sans-serif; background-color: #fcfcfc; }
+        .product-card { border-radius: 24px; overflow: hidden; background: #fff; transition: all 0.4s ease; border: 1px solid #f0f0f0; }
+        .product-card:hover { transform: translateY(-8px); box-shadow: 0 20px 40px rgba(0,0,0,0.06); }
+        .btn-black { background: #000; color: #fff; transition: 0.3s; }
+        .btn-black:hover { background: #333; transform: scale(1.02); }
         .loader { border: 2px solid #f3f3f3; border-top: 2px solid #fff; border-radius: 50%; width: 14px; height: 14px; animation: spin 1s linear infinite; display: inline-block; margin-right: 8px; }
         @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
         .hidden { display: none; }
-        .custom-file-upload { border: 2px dashed #e5e7eb; border-radius: 12px; padding: 15px; text-align: center; cursor: pointer; transition: 0.3s; }
-        .custom-file-upload:hover { border-color: #000; background: #f9fafb; }
+        
+        /* Баримт хавсаргах гоё дизайн */
+        .file-upload-box { border: 2px dashed #ddd; border-radius: 20px; padding: 25px; text-align: center; cursor: pointer; transition: 0.3s; background: #fafafa; }
+        .file-upload-box:hover { border-color: #000; background: #fff; }
+        .file-upload-box i { font-size: 24px; color: #000; margin-bottom: 8px; }
     </style>
 </head>
 <body class="text-gray-900">
@@ -29,10 +32,9 @@
         </div>
         <div class="flex items-center space-x-6">
             <a href="https://www.facebook.com/share/1KhMToLN7S/" target="_blank" class="text-blue-600 text-xl hover:scale-110 transition"><i class="fab fa-facebook"></i></a>
-            <a href="tel:88120525" class="text-gray-800 text-lg hover:text-black"><i class="fas fa-phone-alt"></i></a>
-            <button onclick="toggleCart()" class="relative group">
-                <i class="fas fa-shopping-bag text-2xl group-hover:scale-110 transition"></i>
-                <span id="cart-count" class="absolute -top-2 -right-2 bg-black text-white text-[10px] w-5 h-5 flex items-center justify-center rounded-full font-bold">0</span>
+            <button onclick="toggleCart()" class="relative">
+                <i class="fas fa-shopping-bag text-2xl"></i>
+                <span id="cart-count" class="absolute -top-2 -right-2 bg-black text-white text-[10px] w-5 h-5 flex items-center justify-center rounded-full font-black">0</span>
             </button>
         </div>
     </nav>
@@ -43,50 +45,46 @@
 
     <div id="cart-sidebar" class="fixed inset-y-0 right-0 w-full max-w-md bg-white z-[60] shadow-2xl transform translate-x-full transition-transform duration-500 ease-in-out overflow-y-auto">
         <div class="p-8">
-            <div class="flex justify-between items-center mb-10 border-b pb-6">
-                <h2 class="text-2xl font-black uppercase tracking-tight">Таны сагс</h2>
-                <button onclick="toggleCart()" class="text-3xl text-gray-300 hover:text-black transition">&times;</button>
+            <div class="flex justify-between items-center mb-8 border-b pb-6">
+                <h2 class="text-2xl font-black uppercase tracking-tight">Миний Сагс</h2>
+                <button onclick="toggleCart()" class="text-4xl text-gray-200 hover:text-black transition">&times;</button>
             </div>
 
             <div id="cart-items" class="space-y-6 mb-8"></div>
 
             <div class="space-y-6 border-t pt-8">
-                <div class="space-y-2">
-                    <div class="flex justify-between text-gray-400 font-medium">
-                        <span>Барааны дүн:</span>
+                <div class="space-y-2 font-medium">
+                    <div class="flex justify-between text-gray-400">
+                        <span>Бараа:</span>
                         <span id="sub-total">0₮</span>
                     </div>
-                    <div id="delivery-fee-row" class="flex justify-between text-gray-400 font-medium">
-                        <span>Хүргэлтийн хураамж:</span>
+                    <div id="delivery-fee-row" class="flex justify-between text-gray-400">
+                        <span>Хүргэлт:</span>
                         <span>3,000₮</span>
                     </div>
-                    <div class="flex justify-between text-2xl font-black pt-4 text-black uppercase">
+                    <div class="flex justify-between text-2xl font-black pt-4 border-t uppercase text-black">
                         <span>Нийт:</span>
                         <span id="total-price">0₮</span>
                     </div>
                 </div>
 
-                <div class="grid grid-cols-2 gap-3 p-1 bg-gray-100 rounded-2xl">
-                    <button onclick="setDelivery('delivery')" id="btn-delivery" class="py-3 rounded-xl text-[10px] font-black uppercase transition shadow-sm bg-white text-black">Хүргэлтээр</button>
+                <div class="grid grid-cols-2 gap-2 p-1 bg-gray-100 rounded-2xl">
+                    <button onclick="setDelivery('delivery')" id="btn-delivery" class="py-3 rounded-xl text-[10px] font-black uppercase transition bg-white shadow-sm">Хүргэлтээр</button>
                     <button onclick="setDelivery('pickup')" id="btn-pickup" class="py-3 rounded-xl text-[10px] font-black uppercase transition text-gray-400">Өөрөө авах</button>
                 </div>
 
-                <div id="pickup-info" class="hidden bg-black text-white p-5 rounded-2xl space-y-2">
-                    <p class="text-[10px] font-bold uppercase tracking-widest opacity-60">📍 Очих хаяг:</p>
-                    <p class="text-xs font-medium leading-relaxed">Дундговь аймаг, Сайнцагаан сум, Бабагийн дэлгүүрийн баруун талаасаа 3 дахь хашаа.</p>
+                <div id="pickup-info" class="hidden bg-gray-900 text-white p-5 rounded-2xl">
+                    <p class="text-[9px] font-bold uppercase tracking-widest text-gray-400 mb-2">📍 Байршил:</p>
+                    <p class="text-xs leading-relaxed">Дундговь аймаг, Сайнцагаан сум, Бабагийн дэлгүүрийн баруун талаасаа 3 дахь хашаа.</p>
                 </div>
 
                 <div class="bg-gray-50 p-6 rounded-3xl border border-gray-100 space-y-4">
-                    <div class="flex justify-between items-end">
-                        <div>
-                            <p class="text-[10px] font-black text-gray-400 uppercase tracking-widest mb-1">Хүлээн авагч</p>
-                            <p class="font-bold">Энхжаргал</p>
-                        </div>
-                        <img src="https://upload.wikimedia.org/wikipedia/commons/d/d0/Khan_Bank_logo.png" class="h-6 opacity-80">
+                    <div class="flex justify-between items-center">
+                        <p class="text-[10px] font-black text-gray-400 uppercase tracking-widest">Төлбөр хүлээн авагч: <span class="text-black">ЭНХЖАРГАЛ</span></p>
                     </div>
                     <div class="bg-white p-4 rounded-2xl flex justify-between items-center shadow-sm border border-gray-100">
                         <div>
-                            <p class="text-[10px] font-bold text-gray-400 uppercase tracking-tighter">Хаан Банк</p>
+                            <p class="text-[9px] font-bold text-gray-400 uppercase">Хаан Банк</p>
                             <p class="font-black text-lg">5458026272</p>
                         </div>
                         <button onclick="copyAcc()" class="bg-black text-white px-4 py-2 rounded-xl text-[10px] font-black active:scale-90 transition">ХУУЛАХ</button>
@@ -94,27 +92,27 @@
                 </div>
 
                 <div class="space-y-4">
-                    <input type="text" id="phone" placeholder="Холбоо барих утас" class="w-full p-4 bg-gray-50 rounded-2xl border border-transparent focus:border-black focus:bg-white transition outline-none font-medium">
-                    <textarea id="address" placeholder="Хүргэлтийн дэлгэрэнгүй хаяг" class="w-full p-4 bg-gray-50 rounded-2xl border border-transparent focus:border-black focus:bg-white transition outline-none font-medium h-24"></textarea>
+                    <input type="text" id="phone" placeholder="Утасны дугаар" class="w-full p-4 bg-gray-50 rounded-2xl border border-transparent focus:border-black transition outline-none font-bold">
+                    <textarea id="address" placeholder="Хүргэлтийн хаяг" class="w-full p-4 bg-gray-50 rounded-2xl border border-transparent focus:border-black transition outline-none font-bold h-24"></textarea>
                     
                     <div class="space-y-2">
-                        <p class="text-[10px] font-black text-gray-400 uppercase tracking-widest ml-1">Гүйлгээний баримт</p>
-                        <label class="custom-file-upload block">
+                        <p class="text-[10px] font-black text-gray-400 uppercase tracking-widest ml-1">Төлбөрийн баримт</p>
+                        <label class="file-upload-box block" id="drop-zone">
                             <input type="file" id="receipt" class="hidden" onchange="updateFileName(this)">
-                            <div id="file-label" class="text-gray-400">
-                                <i class="fas fa-cloud-upload-alt text-xl mb-2 block text-black"></i>
-                                <span class="text-[10px] font-bold uppercase">Зураг хавсаргах</span>
+                            <div id="file-label">
+                                <i class="fas fa-camera"></i>
+                                <p class="text-[10px] font-black uppercase text-gray-500">Зураг сонгох / хавсаргах</p>
                             </div>
                         </label>
                     </div>
                 </div>
 
-                <button id="send-order-btn" onclick="sendOrder()" class="w-full btn-order text-white py-6 rounded-3xl font-black tracking-[0.2em] shadow-xl active:scale-95 transition uppercase text-sm">
+                <button id="send-order-btn" onclick="sendOrder()" class="w-full btn-black py-6 rounded-3xl font-black tracking-[0.2em] shadow-xl active:scale-95 transition uppercase text-sm">
                     Захиалга илгээх
                 </button>
                 
-                <div class="text-center">
-                    <a href="https://www.facebook.com/share/1KhMToLN7S/" target="_blank" class="text-[10px] font-bold text-blue-600 hover:underline uppercase tracking-widest"><i class="fab fa-facebook-square mr-1"></i> Манай Facebook хуудас</a>
+                <div class="text-center pt-2">
+                    <a href="https://www.facebook.com/share/1KhMToLN7S/" target="_blank" class="text-[10px] font-bold text-blue-600 hover:underline"><i class="fab fa-facebook mr-1"></i> FACEBOOK ХУУДАСААР ЗОЧЛОХ</a>
                 </div>
             </div>
         </div>
@@ -125,6 +123,7 @@
         const TG_ID = '7069407872';
         let deliveryType = 'delivery'; 
 
+        // ЗҮРГИЙН ӨРГӨТГӨЛИЙГ .JPG (ТОМ ҮСЭГ) БОЛГОСОН
         const products = [
             { id: 1, name: "Prada Set", img: "1.JPG" },
             { id: 2, name: "D&G Light Blue Set", img: "2.JPG" },
@@ -150,15 +149,15 @@
                 const price = (p.img === "6.JPG" || p.img === "12.JPG") ? 120000 : 100000;
                 return `
                     <div class="product-card">
-                        <div class="relative h-56 md:h-80 bg-gray-50 flex items-center justify-center p-4">
+                        <div class="relative h-60 md:h-80 bg-[#f9f9f9] flex items-center justify-center p-6">
                             <img src="./${p.img}" class="w-full h-full object-contain" onerror="this.src='https://via.placeholder.com/400?text=${p.img}'">
-                            <div class="absolute top-4 left-4 bg-white/90 backdrop-blur px-3 py-1 rounded-full text-[10px] font-black shadow-sm border border-gray-100">
+                            <div class="absolute top-4 left-4 bg-white px-3 py-1 rounded-full text-[10px] font-black shadow-sm">
                                 ${price.toLocaleString()}₮
                             </div>
                         </div>
                         <div class="p-6 text-center">
-                            <h3 class="text-[11px] font-bold uppercase tracking-tight h-10 overflow-hidden mb-4 leading-relaxed text-gray-800">${p.name}</h3>
-                            <button onclick="addToCart('${p.name}', ${price}, './${p.img}')" class="w-full bg-black text-white py-3 rounded-xl text-[10px] font-black uppercase tracking-widest hover:bg-gray-800 transition active:scale-95">Сагслах</button>
+                            <h3 class="text-[11px] font-bold uppercase tracking-tight h-10 overflow-hidden mb-4 text-gray-800">${p.name}</h3>
+                            <button onclick="addToCart('${p.name}', ${price}, './${p.img}')" class="w-full bg-black text-white py-3 rounded-xl text-[10px] font-black uppercase tracking-widest hover:bg-gray-800 transition">Сагслах</button>
                         </div>
                     </div>
                 `;
@@ -169,7 +168,7 @@
         function addToCart(name, price, img) {
             cart.push({ name, price, img });
             updateCart();
-            alert("Сагсанд нэмэгдлээ. Төлбөр төлөх бол баруун дээд буланд байрлах сагсан дээр дарна уу. ✨");
+            alert("Сагсанд амжилттай нэмэгдлээ! ✨");
         }
 
         function updateCart() {
@@ -178,15 +177,15 @@
             list.innerHTML = cart.map((item, index) => `
                 <div class="flex items-center justify-between group">
                     <div class="flex items-center space-x-4">
-                        <div class="w-16 h-16 bg-gray-50 rounded-2xl p-2 border border-gray-100">
-                            <img src="${item.img}" class="w-full h-full object-contain">
+                        <div class="w-16 h-16 bg-gray-50 rounded-2xl p-2 border border-gray-100 flex items-center justify-center">
+                            <img src="${item.img}" class="max-w-full max-h-full object-contain">
                         </div>
                         <div>
-                            <p class="font-bold text-xs uppercase tracking-tight text-gray-800">${item.name}</p>
-                            <p class="text-red-500 font-black text-sm">${item.price.toLocaleString()}₮</p>
+                            <p class="font-bold text-[10px] uppercase text-gray-800">${item.name}</p>
+                            <p class="text-red-500 font-black text-xs">${item.price.toLocaleString()}₮</p>
                         </div>
                     </div>
-                    <button onclick="removeItem(${index})" class="text-gray-300 hover:text-red-500 transition px-2"><i class="fas fa-times"></i></button>
+                    <button onclick="removeItem(${index})" class="text-gray-300 hover:text-red-500 transition px-2"><i class="fas fa-trash-alt"></i></button>
                 </div>
             `).join('');
 
@@ -195,17 +194,17 @@
             
             document.getElementById('sub-total').innerText = subTotal.toLocaleString() + '₮';
             document.getElementById('total-price').innerText = (subTotal + fee).toLocaleString() + '₮';
-            document.getElementById('delivery-fee-row').className = fee > 0 ? "flex justify-between text-gray-400 font-medium" : "hidden";
+            document.getElementById('delivery-fee-row').className = fee > 0 ? "flex justify-between text-gray-400" : "hidden";
         }
 
         function removeItem(i) { cart.splice(i, 1); updateCart(); }
         function toggleCart() { document.getElementById('cart-sidebar').classList.toggle('translate-x-full'); }
-        function copyAcc() { navigator.clipboard.writeText("5458026272"); alert("Данс хуулагдлаа!"); }
+        function copyAcc() { navigator.clipboard.writeText("5458026272"); alert("Дансны дугаар хуулагдлаа!"); }
 
         function updateFileName(input) {
             const label = document.getElementById('file-label');
             if (input.files && input.files[0]) {
-                label.innerHTML = `<span class="text-black font-bold text-[10px] uppercase underline italic">${input.files[0].name} хавсаргав</span>`;
+                label.innerHTML = `<i class="fas fa-check-circle text-green-500"></i><p class="text-[10px] font-black uppercase text-black mt-2">${input.files[0].name}</p>`;
             }
         }
 
@@ -217,12 +216,12 @@
             const addrInput = document.getElementById('address');
 
             if(type === 'delivery') {
-                btnD.className = "py-3 rounded-xl text-[10px] font-black uppercase transition shadow-sm bg-white text-black";
+                btnD.className = "py-3 rounded-xl text-[10px] font-black uppercase transition bg-white shadow-sm";
                 btnP.className = "py-3 rounded-xl text-[10px] font-black uppercase transition text-gray-400";
                 info.classList.add('hidden');
-                addrInput.placeholder = "Хүргэлтийн дэлгэрэнгүй хаяг";
+                addrInput.placeholder = "Хүргэлтийн хаяг";
             } else {
-                btnP.className = "py-3 rounded-xl text-[10px] font-black uppercase transition shadow-sm bg-white text-black";
+                btnP.className = "py-3 rounded-xl text-[10px] font-black uppercase transition bg-white shadow-sm";
                 btnD.className = "py-3 rounded-xl text-[10px] font-black uppercase transition text-gray-400";
                 info.classList.remove('hidden');
                 addrInput.placeholder = "Нэмэлт тайлбар (заавал биш)";
@@ -236,7 +235,7 @@
             const file = document.getElementById('receipt').files[0];
             const btn = document.getElementById('send-order-btn');
 
-            if (!phone || cart.length === 0) { alert("Мэдээллээ бүрэн оруулна уу!"); return; }
+            if (!phone || cart.length === 0) { alert("Утас болон сагсаа шалгана уу!"); return; }
 
             btn.disabled = true;
             btn.innerHTML = '<span class="loader"></span> ИЛГЭЭЖ БАЙНА...';
@@ -261,9 +260,9 @@
                     await fetch(`https://api.telegram.org/bot${TG_TOKEN}/sendPhoto`, { method: 'POST', body: fd });
                 }
 
-                alert("Захиалга амжилттай илгээгдлээ! Тантай тун удахгүй холбогдох болно. ✨");
+                alert("Захиалга илгээгдлээ! Тантай удахгүй холбогдоно. ✨");
                 cart = []; updateCart(); toggleCart();
-            } catch (e) { alert("Алдаа гарлаа. Дахин оролдоно уу."); }
+            } catch (e) { alert("Алдаа гарлаа."); }
             finally { btn.disabled = false; btn.innerHTML = 'Захиалга илгээх'; }
         }
 
