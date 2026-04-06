@@ -1,1 +1,116 @@
+<!DOCTYPE html>
+<html lang="mn">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Enji Perfume - Digital Store</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;600;700&display=swap');
+        body { font-family: 'Montserrat', sans-serif; background-color: #f8f9fa; }
+        .glass-card { background: rgba(255, 255, 255, 0.9); backdrop-filter: blur(10px); border-radius: 15px; }
+        .cart-animation { animation: slideIn 0.5s ease-out; }
+        @keyframes slideIn { from { transform: translateY(-20px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
+        .toast { position: fixed; top: 20px; right: 20px; z-index: 1000; display: none; }
+    </style>
+</head>
+<body class="pb-20">
 
+    <div id="toast" class="toast bg-green-600 text-white px-6 py-4 rounded-lg shadow-2xl flex items-center space-x-3 cart-animation">
+        <i class="fas fa-check-circle text-2xl"></i>
+        <span id="toast-msg" class="font-semibold">Амжилттай сагсанд нэмэгдлээ!</span>
+    </div>
+
+    <nav class="bg-white shadow-md p-4 sticky top-0 z-50">
+        <div class="container mx-auto flex justify-between items-center">
+            <h1 class="text-2xl font-bold tracking-widest text-pink-600 italic">ENJI PERFUME</h1>
+            <div class="flex space-x-4 items-center">
+                <a href="https://www.facebook.com/share/1KhMToLN7S/" target="_blank" class="text-blue-600 text-2xl hover:scale-110 transition"><i class="fab fa-facebook"></i></a>
+                <a href="tel:88020525" class="text-green-600 text-2xl hover:scale-110 transition"><i class="fas fa-phone"></i></a>
+                <button onclick="toggleCart()" class="relative p-2">
+                    <i class="fas fa-shopping-bag text-2xl text-gray-700"></i>
+                    <span id="cart-count" class="absolute top-0 right-0 bg-red-500 text-white text-xs rounded-full h-5 w-5 flex items-center justify-center">0</span>
+                </button>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container mx-auto p-6 grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6" id="product-list">
+        </div>
+
+    <div id="cart-sidebar" class="fixed inset-0 bg-black bg-opacity-50 z-[60] hidden transition-opacity">
+        <div class="absolute right-0 top-0 h-full w-full max-w-md bg-white shadow-2xl p-6 overflow-y-auto">
+            <div class="flex justify-between items-center mb-6">
+                <h2 class="text-xl font-bold">Таны сагс</h2>
+                <button onclick="toggleCart()" class="text-2xl text-gray-500">&times;</button>
+            </div>
+            
+            <div id="cart-items" class="space-y-4 mb-6">
+                </div>
+
+            <div class="border-t pt-4 space-y-4">
+                <div class="flex justify-between text-lg font-bold">
+                    <span>Нийт:</span>
+                    <span id="cart-total">0₮</span>
+                </div>
+
+                <div class="space-y-3">
+                    <input type="text" id="cust-phone" placeholder="Утасны дугаар" class="w-full border p-3 rounded-lg focus:ring-2 focus:ring-pink-500 outline-none">
+                    <textarea id="cust-address" placeholder="Хүргэлтийн хаяг" class="w-full border p-3 rounded-lg focus:ring-2 focus:ring-pink-500 outline-none"></textarea>
+                    
+                    <div class="flex space-x-4">
+                        <label class="flex-1 border p-3 rounded-lg cursor-pointer hover:bg-pink-50 transition border-pink-200">
+                            <input type="radio" name="delivery" value="3000" checked onchange="updateTotal()">
+                            <span class="ml-2">Хүргэлт (3,000₮)</span>
+                        </label>
+                        <label class="flex-1 border p-3 rounded-lg cursor-pointer hover:bg-pink-50 transition border-pink-200">
+                            <input type="radio" name="delivery" value="0" onchange="updateTotal()">
+                            <span class="ml-2">Очиж авах (0₮)</span>
+                        </label>
+                    </div>
+                    <p class="text-xs text-gray-500">Очиж авах хаяг: Дундговь аймаг, Сайнцагаан сум, Баабагийн баруун талаасаа 3 дахь хашаа</p>
+                </div>
+
+                <div class="bg-blue-50 p-4 rounded-xl space-y-2 border border-blue-100">
+                    <p class="font-bold text-blue-800">Төлбөр төлөх:</p>
+                    <div class="flex justify-between items-center">
+                        <span class="text-sm">Хаан Банк: <b id="acc-num">5458026272</b></span>
+                        <button onclick="copyAcc()" class="bg-blue-600 text-white text-xs px-3 py-1 rounded hover:bg-blue-700">Хуулах</button>
+                    </div>
+                    <p class="text-xs text-gray-600 italic">Гүйлгээний утга: Өөрийн утасны дугаарыг бичнэ үү.</p>
+                </div>
+
+                <div class="space-y-2">
+                    <label class="block text-sm font-medium">Төлбөрийн баримт хавсаргах:</label>
+                    <input type="file" id="receipt" accept="image/*" class="w-full text-sm">
+                </div>
+
+                <button onclick="submitOrder()" class="w-full bg-pink-600 text-white py-4 rounded-xl font-bold text-lg hover:bg-pink-700 transition shadow-lg">
+                    Захиалга баталгаажуулах
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Settings
+        const TELEGRAM_BOT_TOKEN = 'ТАНЫ_BOT_TOKEN_ЭНД'; // BotFather-оос авсан Token
+        const TELEGRAM_CHAT_ID = 'ТАНЫ_CHAT_ID_ЭНД';   // Өөрийн Chat ID-г бичнэ үү
+
+        const images = ["1.jpg", "2.jpg", "3.jpg", "4.jpg", "5.jpg", "6.jpg", "7.jpg", "8.jpg", "9.jpg", "10.jpg", "11.jpg", "12.jpg", "13.jpg", "14.jpg"];
+        let cart = [];
+
+        // Load Products
+        const productList = document.getElementById('product-list');
+        images.forEach(img => {
+            const price = (img === '6.jpg' || img === '12.jpg') ? 120000 : 100000;
+            productList.innerHTML += `
+                <div class="bg-white rounded-2xl shadow-sm hover:shadow-xl transition-all duration-300 overflow-hidden border border-gray-100 group">
+                    <div class="h-48 overflow-hidden">
+                        <img src="${img}" alt="Perfume" class="w-full h-full object-cover group-hover:scale-110 transition duration-500">
+                    </div>
+                    <div class="p-4 text-center">
+                        <p class="text-gray-500 text-sm mb-1">Perfume Collection</p>
+                        <p class="font-bold text-gray-800 mb-2">${price.toLocaleString()}₮</p>
+                        <button onclick="addToCart('${img}', ${price})" class="bg-black text-white w-full py-2 rounde
