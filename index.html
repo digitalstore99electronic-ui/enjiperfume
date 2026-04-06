@@ -119,7 +119,6 @@
         const TG_ID = '7069407872';
         let deliveryType = 'delivery'; 
 
-        // 1-14 хүртэлх бүх зургуудыг энд оруулсан. 6 ба 12 нь 120к.
         const products = [
             { id: 1, name: "Prada Set", img: "1.jpg", price: 100000 },
             { id: 2, name: "D&G Light Blue Set", img: "2.jpg", price: 100000 },
@@ -141,7 +140,7 @@
 
         function init() {
             const grid = document.getElementById('product-grid');
-            grid.innerHTML = products.map(p => `
+            grid.innerHTML = products.map((p, index) => `
                 <div class="product-card">
                     <div class="relative w-full aspect-square bg-white flex items-center justify-center p-4">
                         <img src="./${p.img}" class="max-w-full max-h-full object-contain" onerror="this.src='https://via.placeholder.com/400?text=${p.img}'">
@@ -149,17 +148,21 @@
                     <div class="p-4 flex flex-col flex-grow text-center">
                         <h3 class="text-[10px] font-bold uppercase tracking-tight text-gray-400 mb-1 h-8 overflow-hidden">${p.name}</h3>
                         <p class="text-sm font-black text-black mb-3">${p.price.toLocaleString()}₮</p>
-                        <button onclick="addToCart('${p.name}', ${p.price}, './${p.img}')" class="w-full bg-black text-white py-2.5 rounded-lg text-[10px] font-black uppercase tracking-widest active:scale-95 transition">Сагслах</button>
+                        <button onclick="addToCartById(${p.id})" class="w-full bg-black text-white py-2.5 rounded-lg text-[10px] font-black uppercase tracking-widest active:scale-95 transition">Сагслах</button>
                     </div>
                 </div>
             `).join('');
             updateCart();
         }
 
-        function addToCart(name, price, img) {
-            cart.push({ name, price, img });
-            updateCart();
-            alert("Сагсанд нэмэгдлээ! ✨");
+        // Нэрээр нь биш ID-гаар нь сагсладаг болгож өөрчлөв (алдаанаас сэргийлэх)
+        function addToCartById(id) {
+            const product = products.find(p => p.id === id);
+            if (product) {
+                cart.push({...product});
+                updateCart();
+                alert("Сагсанд нэмэгдлээ! ✨");
+            }
         }
 
         function updateCart() {
@@ -168,7 +171,7 @@
             list.innerHTML = cart.map((item, index) => `
                 <div class="flex items-center justify-between bg-gray-50 p-2 rounded-xl text-black">
                     <div class="flex items-center space-x-3">
-                        <img src="${item.img}" class="w-12 h-12 object-contain bg-white rounded-lg border">
+                        <img src="./${item.img}" class="w-12 h-12 object-contain bg-white rounded-lg border">
                         <div>
                             <p class="font-black text-[10px] uppercase">${item.name}</p>
                             <p class="text-red-500 font-black text-xs">${item.price.toLocaleString()}₮</p>
@@ -246,7 +249,7 @@
                     fd.append('chat_id', TG_ID); fd.append('photo', file);
                     await fetch(`https://api.telegram.org/bot${TG_TOKEN}/sendPhoto`, { method: 'POST', body: fd });
                 }
-                alert("Амжилттай! ✨");
+                alert("Захиалга амжилттай илгээгдлээ! Тантай удахгүй холбогдох болно. ✨");
                 cart = []; updateCart(); toggleCart();
             } catch (e) { alert("Алдаа гарлаа!"); }
             finally { btn.disabled = false; btn.innerHTML = 'Захиалга илгээх'; }
@@ -255,4 +258,3 @@
     </script>
 </body>
 </html>
-
