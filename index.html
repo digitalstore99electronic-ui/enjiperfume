@@ -1,1 +1,118 @@
+<!DOCTYPE html>
+<html lang="mn">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Enji Perfume Official</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;600;700&display=swap');
+        body { font-family: 'Montserrat', sans-serif; background-color: #fff; }
+        .product-card { border-radius: 15px; overflow: hidden; border: 1px solid #f3f4f6; transition: 0.3s; background: #fff; }
+        .btn-order { background: linear-gradient(135deg, #1a1a1a 0%, #000 100%); }
+        .loader { border: 2px solid #f3f3f3; border-top: 2px solid #fff; border-radius: 50%; width: 14px; height: 14px; animation: spin 1s linear infinite; display: inline-block; margin-right: 8px; }
+        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+        .hidden { display: none; }
+    </style>
+</head>
+<body class="text-gray-900">
 
+    <nav class="sticky top-0 z-50 bg-white/90 backdrop-blur-md border-b border-gray-100 px-6 py-4 flex justify-between items-center">
+        <div>
+            <h1 class="text-xl font-black italic tracking-tighter">ENJI PERFUME</h1>
+            <p class="text-[8px] uppercase tracking-[0.3em] text-gray-400">Luxury Collection</p>
+        </div>
+        <div class="flex items-center space-x-5">
+            <a href="tel:88120525" class="text-gray-700 text-lg"><i class="fas fa-phone-alt"></i></a>
+            <button onclick="toggleCart()" class="relative">
+                <i class="fas fa-shopping-bag text-2xl"></i>
+                <span id="cart-count" class="absolute -top-2 -right-2 bg-red-500 text-white text-[10px] w-5 h-5 flex items-center justify-center rounded-full font-bold">0</span>
+            </button>
+        </div>
+    </nav>
+
+    <main class="container mx-auto px-4 py-8">
+        <div id="product-grid" class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 md:gap-8"></div>
+    </main>
+
+    <div id="cart-sidebar" class="fixed inset-y-0 right-0 w-full max-w-md bg-white z-[60] shadow-2xl transform translate-x-full transition-transform duration-300 overflow-y-auto">
+        <div class="p-8">
+            <div class="flex justify-between items-center mb-8 border-b pb-4">
+                <h2 class="text-2xl font-bold">Сагс</h2>
+                <button onclick="toggleCart()" class="text-3xl text-gray-300 hover:text-black">&times;</button>
+            </div>
+
+            <div id="cart-items" class="space-y-6 mb-8 text-sm"></div>
+
+            <div class="space-y-6 border-t pt-4">
+                <div class="space-y-1">
+                    <div class="flex justify-between text-sm text-gray-500">
+                        <span>Барааны үнэ:</span>
+                        <span id="sub-total">0₮</span>
+                    </div>
+                    <div id="delivery-fee-row" class="flex justify-between text-sm text-gray-500">
+                        <span>Хүргэлт:</span>
+                        <span id="delivery-fee">3,000₮</span>
+                    </div>
+                    <div class="flex justify-between text-xl font-bold pt-2 border-t">
+                        <span>Нийт:</span>
+                        <span id="total-price" class="text-red-600">0₮</span>
+                    </div>
+                </div>
+
+                <div class="space-y-2">
+                    <label class="text-xs font-bold text-gray-400 uppercase tracking-widest">Авах хэлбэр:</label>
+                    <div class="flex gap-2">
+                        <button onclick="setDelivery('delivery')" id="btn-delivery" class="flex-1 py-2 rounded-xl border border-black bg-black text-white text-[10px] font-bold transition">Хүргэлтээр (+3к)</button>
+                        <button onclick="setDelivery('pickup')" id="btn-pickup" class="flex-1 py-2 rounded-xl border border-gray-200 text-gray-500 text-[10px] font-bold transition">Өөрөө авах</button>
+                    </div>
+                </div>
+
+                <div id="pickup-info" class="hidden bg-blue-50 p-4 rounded-xl border border-blue-100">
+                    <p class="text-[10px] font-bold text-blue-600 mb-1 leading-tight italic">
+                        📍 Дундговь аймаг, Сайнцагаан сум, Бабагийн дэлгүүрийн баруун талаасаа 3 дахь хашаа.
+                    </p>
+                </div>
+
+                <div class="bg-gray-50 p-5 rounded-2xl space-y-2 border border-gray-100">
+                    <p class="text-[10px] font-bold text-gray-400 uppercase tracking-widest">Төлбөр хүлээн авагч: Энхжаргал</p>
+                    <div class="flex justify-between items-center bg-white p-3 rounded-xl shadow-sm font-bold text-sm">
+                        <span>Хаан банк: 5458026272</span>
+                        <button onclick="copyAcc()" class="text-[10px] bg-black text-white px-3 py-1 rounded-lg">Хуулах</button>
+                    </div>
+                </div>
+
+                <div class="space-y-3">
+                    <input type="text" id="phone" placeholder="Утасны дугаар" class="w-full p-4 bg-gray-50 rounded-xl outline-none focus:ring-1 focus:ring-black">
+                    <textarea id="address" placeholder="Хүргэлтийн хаяг (Хүргэлтээр бол)" class="w-full p-4 bg-gray-50 rounded-xl outline-none focus:ring-1 focus:ring-black h-20"></textarea>
+                    
+                    <label class="block">
+                        <span class="text-[10px] font-bold text-gray-400 uppercase ml-1">Гүйлгээний баримт (Зураг)</span>
+                        <input type="file" id="receipt" class="mt-1 block w-full text-xs text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:bg-black file:text-white file:font-bold">
+                    </label>
+                </div>
+
+                <button id="send-order-btn" onclick="sendOrder()" class="w-full btn-order text-white py-5 rounded-2xl font-bold tracking-widest shadow-lg active:scale-95 transition">
+                    ЗАХИАЛГА ИЛГЭЭХ
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const TG_TOKEN = '8578358695:AAGDHEjmw1EDhkdH60HWfys498gmuGM-Njo';
+        const TG_ID = '7069407872';
+        let deliveryType = 'delivery'; 
+
+        const products = [
+            { id: 1, name: "Prada Set", img: "1.jpg" },
+            { id: 2, name: "D&G Light Blue Set", img: "2.jpg" },
+            { id: 3, name: "Victoria's Secret Bombshell", img: "3.jpg" },
+            { id: 4, name: "212 Sexy Men", img: "4.jpg" },
+            { id: 5, name: "YSL Mon Paris", img: "5.jpg" },
+            { id: 6, name: "Prada Luna Rossa Ocean", img: "6.jpg" },
+            { id: 7, name: "Bvlgari Pour Homme", img: "7.jpg" },
+            { id: 8, name: "Dior Miniature Set", img: "8.jpg" },
+            { id: 9, name: "Chanel Miniature Set", img: "9.jpg" },
+ 
