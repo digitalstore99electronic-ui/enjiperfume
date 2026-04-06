@@ -1,149 +1,170 @@
+/* Google Fonts - Jakarta Sans нь илүү орчин үеийн харагдуулна */
 @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;600;800&display=swap');
 
 :root {
     --gold: #d4af37;
+    --gold-light: #f1e5ac;
     --dark: #0a0a0a;
-    --glass: rgba(255, 255, 255, 0.8);
-    --shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.07);
+    --glass: rgba(255, 255, 255, 0.85);
+    --shadow: 0 10px 40px rgba(0, 0, 0, 0.06);
+    --transition: all 0.4s cubic-bezier(0.165, 0.84, 0.44, 1);
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    -webkit-tap-highlight-color: transparent;
 }
 
 body { 
     font-family: 'Plus Jakarta Sans', sans-serif; 
-    background-color: #fcfcfc; 
+    background-color: #f8f8f8; 
     color: var(--dark);
-    scroll-behavior: smooth;
+    line-height: 1.6;
 }
 
-/* Header-ийг илүү чамин болгох */
+/* Header & Navigation */
 nav {
-    background: var(--glass) !important;
-    backdrop-filter: blur(10px);
-    -webkit-backdrop-filter: blur(10px);
-    border-bottom: 1px solid rgba(0,0,0,0.05) !important;
-    box-shadow: var(--shadow);
+    position: fixed;
+    top: 0;
+    width: 100%;
+    z-index: 100;
+    background: var(--glass);
+    backdrop-filter: blur(15px);
+    -webkit-backdrop-filter: blur(15px);
+    border-bottom: 1px solid rgba(0,0,0,0.05);
+    padding: 15px 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
 }
 
 nav h1 {
-    background: linear-gradient(45deg, #000, #444);
+    font-weight: 800;
+    letter-spacing: -1px;
+    font-size: 1.4rem;
+    background: linear-gradient(45deg, #000, #555);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
-    letter-spacing: -1px;
 }
 
-/* Барааны картны дизайн */
+/* Барааны жагсаалт (Grid) */
+#product-list {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 15px;
+    padding: 100px 15px 30px;
+}
+
+/* Барааны карт */
 .product-card { 
-    background: #ffffff; 
-    border-radius: 24px; 
-    border: 1px solid rgba(0,0,0,0.03); 
-    transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275); 
-    overflow: hidden;
-    position: relative;
+    background: #fff; 
+    border-radius: 20px; 
+    padding: 15px;
+    border: 1px solid rgba(0,0,0,0.02);
+    box-shadow: var(--shadow);
+    transition: var(--transition);
+    text-align: center;
 }
 
-.product-card:hover { 
-    transform: translateY(-10px); 
-    box-shadow: 0 20px 40px rgba(0,0,0,0.08);
-    border-color: var(--gold);
+.product-card:active {
+    transform: scale(0.96);
 }
 
-/* Зургийг амилуулах эффект */
 .product-card img {
-    transition: all 0.6s ease;
-}
-
-.product-card:hover img {
-    transform: scale(1.12);
-}
-
-/* Үнийн хэсэг */
-.product-card p {
-    font-size: 1.1rem;
-    color: var(--gold);
-    font-weight: 800;
-}
-
-/* Сагслах товчлуур */
-.product-card button {
-    background: var(--dark);
+    width: 100%;
+    height: 160px;
+    object-fit: contain;
     border-radius: 12px;
-    letter-spacing: 1px;
+    margin-bottom: 12px;
+    transition: var(--transition);
+}
+
+.product-card h3 {
+    font-size: 0.9rem;
     font-weight: 600;
-    transition: all 0.3s ease;
+    margin-bottom: 5px;
+    text-transform: uppercase;
+    height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 
-.product-card:hover button {
-    background: var(--gold);
-    box-shadow: 0 4px 15px rgba(212, 175, 55, 0.3);
+.product-card p {
+    font-weight: 800;
+    color: var(--gold);
+    font-size: 1.1rem;
+    margin-bottom: 12px;
 }
 
-/* Сагсны sidebar-ийг илүү гоё болгох */
+.product-card button {
+    width: 100%;
+    background: var(--dark);
+    color: #fff;
+    border: none;
+    padding: 12px;
+    border-radius: 12px;
+    font-weight: 700;
+    font-size: 0.8rem;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    cursor: pointer;
+}
+
+/* Custom Alert Modal */
+.custom-alert {
+    position: fixed;
+    top: 0; left: 0; width: 100%; height: 100%;
+    background: rgba(0, 0, 0, 0.5);
+    display: flex; align-items: center; justify-content: center;
+    z-index: 1000; opacity: 0; visibility: hidden;
+    transition: var(--transition);
+    backdrop-filter: blur(8px);
+}
+
+.custom-alert.active { opacity: 1; visibility: visible; }
+
+.alert-content {
+    background: rgba(255, 255, 255, 0.9);
+    padding: 30px; border-radius: 24px; text-align: center;
+    box-shadow: 0 20px 60px rgba(0,0,0,0.2);
+    width: 300px; transform: scale(0.8); transition: var(--transition);
+}
+
+.custom-alert.active .alert-content { transform: scale(1); }
+
+.alert-btn {
+    width: 100%; margin-top: 20px; background: var(--dark);
+    color: #fff; border: none; padding: 12px; border-radius: 12px;
+    font-weight: 700; cursor: pointer;
+}
+
+/* Sidebar (Cart) */
 #cart-sidebar {
-    background: var(--glass);
-    backdrop-filter: blur(20px);
-    border-left: 1px solid rgba(255,255,255,0.3);
+    position: fixed;
+    top: 0; right: -100%; width: 100%; height: 100%;
+    background: #fff; z-index: 200;
+    transition: var(--transition);
+    padding: 25px;
+    overflow-y: auto;
 }
 
-/* Захиалга илгээх товчлуурыг гэрэлтүүлэх (Pulse effect) */
-#send-order-btn {
-    background: linear-gradient(135deg, #000 0%, #333 100%);
-    position: relative;
-    overflow: hidden;
+#cart-sidebar.active { right: 0; }
+
+.cart-header {
+    display: flex; justify-content: space-between; align-items: center;
+    margin-bottom: 30px;
 }
 
-#send-order-btn::after {
-    content: '';
-    position: absolute;
-    top: -50%;
-    left: -50%;
-    width: 200%;
-    height: 200%;
-    background: rgba(255,255,255,0.1);
-    transform: rotate(45deg);
-    transition: 0.5s;
-}
-
-#send-order-btn:hover::after {
-    left: 120%;
-}
-
-/* Input хэсгүүд */
-input, textarea {
-    background: #f5f5f7 !important;
-    border: 1px solid transparent !important;
-    transition: all 0.3s ease !important;
-    border-radius: 16px !important;
-}
-
-input:focus, textarea:focus {
-    background: #fff !important;
-    border-color: var(--gold) !important;
-    box-shadow: 0 0 0 4px rgba(212, 175, 55, 0.1) !important;
-}
-
-/* Баримт хавсаргах хэсэг */
-.file-box {
-    background: #fff;
-    border: 2px dashed #eee;
-    transition: all 0.3s ease;
-}
-
-.file-box:hover {
-    border-color: var(--gold);
-    background: #fffcf5;
-}
-
-/* Скролл мөр (Scrollbar) */
-::-webkit-scrollbar {
-    width: 8px;
-}
-::-webkit-scrollbar-track {
-    background: #f1f1f1;
-}
-::-webkit-scrollbar-thumb {
-    background: #ccc;
+/* Сагсны товчлуур дээрх тоо */
+#cart-count {
+    background: #ff3b30;
+    color: #fff;
+    font-size: 10px;
+    padding: 2px 6px;
     border-radius: 10px;
+    position: absolute;
+    top: -5px; right: -5px;
 }
-::-webkit-scrollbar-thumb:hover {
-    background: var(--gold);
-}
-
